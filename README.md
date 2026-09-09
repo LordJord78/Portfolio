@@ -21,16 +21,11 @@ npm run preview  # serve the production build locally
    `index.html` at build time for the canonical URL, the Open Graph tags and
    the JSON-LD. It currently reads `https://REPLACE-WITH-YOUR-DOMAIN`. This is
    the only placeholder left in the repository.
-2. **Gameplay clip (optional).** The Voxel Trench Warfare card shows a
-   generated diagram, not a screenshot. To use real footage, drop the file at
-   `src/assets/trench.mp4` (1920×1080, 8–10s, muted, loops cleanly, ideally
-   under 3 MB) and swap the `<ProjectVisual>` in
-   `src/components/sections/Projects.jsx` for:
-   ```jsx
-   <video src={trench} autoPlay muted loop playsInline
-          style={{ width: "100%", display: "block" }} />
-   ```
-3. **Gamma screenshot (optional).** Same pattern, as an `<img>`.
+2. **Gamma screenshot (optional).** The Gamma regime tool card shows a
+   generated diagram, not a screenshot. To use a real one, give the project a
+   `media` entry in `src/data/projects.js` — `{ src, poster, alt }`, the same
+   shape the Voxel Trench Warfare card uses — and extend `ProjectMedia` to
+   render an `<img>` when it is handed a still rather than a clip.
 
 ## Deploying
 
@@ -42,6 +37,12 @@ pointed at it later.
 
 ## Notes
 
+- The Voxel Trench Warfare card plays a nine-second cut of a real screen
+  capture: 1280×720, CRF 26, no audio, 1.0 MB, in `src/assets/trench.mp4`
+  with a poster frame beside it. `ProjectMedia` swaps in the poster as a still
+  image under `prefers-reduced-motion`, and pauses the clip when the card
+  scrolls out of view. The 15 MB source capture stays out of the repository —
+  see `.gitignore`.
 - The hero is a WebGL limit-order-book depth surface: price across, time
   receding, resting size as height, drawn by a custom GLSL shader.
   **The data is synthetic** — a shaped random walk, not a replay of a real
