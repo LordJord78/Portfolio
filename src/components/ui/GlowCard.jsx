@@ -70,7 +70,9 @@ export default function GlowCard({
   return (
     <Tag
       ref={ref}
-      className={`glow ${active ? "is-live" : ""} ${className}`.trim()}
+      className={`glow ${active ? "is-live" : ""} ${tilt ? "" : "is-flat"} ${className}`
+        .replace(/\s+/g, " ")
+        .trim()}
       onPointerMove={active ? onMove : undefined}
       onPointerLeave={active ? reset : undefined}
       {...rest}

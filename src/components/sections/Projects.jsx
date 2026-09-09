@@ -51,7 +51,14 @@ function Links({ project, extra }) {
 function Featured({ project }) {
   return (
     <Reveal>
-      <GlowCard as="article" className="pj__feature" aria-labelledby={`${project.id}-h`}>
+      {/* No tilt: the ladder beside this copy is live text, and a 3D
+          rotation would rasterise and soften every figure in it. */}
+      <GlowCard
+        as="article"
+        className="pj__feature"
+        tilt={false}
+        aria-labelledby={`${project.id}-h`}
+      >
         <div className="pj__feature-body">
           <Meta project={project} />
           <h3 id={`${project.id}-h`} className="pj__title pj__title--lg">
@@ -103,9 +110,20 @@ function Card({ project, delay }) {
   const uid = useId();
   const panelId = `${uid}-detail`;
 
+  /* The tilt is a real 3D rotation, so the browser rasterises the whole
+     card and resamples it — fine over footage, but it softens the vector
+     text and hairlines of a generated figure. Cards carrying a figure
+     keep the glow and the lit edge and skip the tilt. */
+  const figure = !project.media;
+
   return (
     <Reveal delay={delay}>
-      <GlowCard as="article" className="pj__card" aria-labelledby={`${project.id}-h`}>
+      <GlowCard
+        as="article"
+        className="pj__card"
+        tilt={!figure}
+        aria-labelledby={`${project.id}-h`}
+      >
         <Visual project={project} />
 
         <div className="pj__card-body">

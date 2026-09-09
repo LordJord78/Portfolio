@@ -61,6 +61,15 @@
   transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));
 }
 
+/* Without a tilt there is no reason to hold a 3D transform: even at zero
+   rotation it composites the card into a texture, and anything vector
+   inside it is resampled rather than redrawn. */
+.glow.is-flat,
+.glow.is-flat.is-live {
+  transform: none;
+  transform-style: flat;
+}
+
 .glow.is-live:hover,
 .glow:focus-within {
   box-shadow: var(--glow), var(--lift);
