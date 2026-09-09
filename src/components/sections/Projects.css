@@ -168,23 +168,9 @@
   overflow: hidden;
 }
 
-/* Only footage gets the hover push-in. A scale on the generated figure
-   would rasterise the SVG at its layout size and resample the bitmap up,
-   which turns 7px labels and hairline rules to mush — and zooming a chart
-   misstates its scale anyway. */
-.pj__card .pv--media {
-  transition: scale 720ms var(--ease-out);
-}
-
-.pj__card:hover .pv--media {
-  scale: 1.045;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pj__card:hover .pv--media {
-    scale: 1;
-  }
-}
+/* No push-in on hover. It scaled a rasterised copy of whatever sat in the
+   frame, and the cards read as a set only if they all answer the cursor
+   the same way — with the glow and the lit edge, which cost no raster. */
 
 .pj__card-body {
   display: flex;

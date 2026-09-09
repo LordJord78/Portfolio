@@ -1,8 +1,9 @@
+/* Nothing here transforms. A card holding live text or a vector figure is
+   composited and resampled the moment it does, and the figures are the
+   point of these cards. */
 .glow {
   --mx: 50%;
   --my: 0%;
-  --rx: 0deg;
-  --ry: 0deg;
 
   position: relative;
   isolation: isolate;
@@ -11,8 +12,7 @@
     var(--sheen),
     linear-gradient(180deg, var(--panel-hi), var(--panel));
   box-shadow: var(--lift);
-  transition: box-shadow var(--med) var(--ease), transform var(--med) var(--ease-out);
-  transform-style: preserve-3d;
+  transition: box-shadow var(--med) var(--ease);
 }
 
 /* 1px gradient border, drawn as a mask so it stays crisp at any radius. */
@@ -57,19 +57,6 @@
   height: 100%;
 }
 
-.glow.is-live {
-  transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));
-}
-
-/* Without a tilt there is no reason to hold a 3D transform: even at zero
-   rotation it composites the card into a texture, and anything vector
-   inside it is resampled rather than redrawn. */
-.glow.is-flat,
-.glow.is-flat.is-live {
-  transform: none;
-  transform-style: flat;
-}
-
 .glow.is-live:hover,
 .glow:focus-within {
   box-shadow: var(--glow), var(--lift);
@@ -88,10 +75,4 @@
     var(--rule) 60%,
     transparent
   );
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glow {
-    transform: none !important;
-  }
 }
