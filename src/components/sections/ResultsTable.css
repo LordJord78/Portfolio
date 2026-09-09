@@ -1,0 +1,168 @@
+.rt {
+  position: relative;
+  border-radius: var(--r-3);
+  border: 1px solid var(--rule);
+  background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+  box-shadow: var(--lift);
+  overflow: hidden;
+}
+
+.rt__scroll {
+  overflow-x: auto;
+  padding: clamp(1rem, 2.4vw, 1.75rem);
+}
+
+.rt__scroll:focus-visible {
+  outline-offset: -2px;
+}
+
+.rt__table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: var(--t-0);
+}
+
+.rt__caption {
+  caption-side: bottom;
+  padding-top: 1rem;
+  text-align: left;
+  font-size: var(--t--2);
+  line-height: 1.65;
+  color: var(--faint);
+}
+
+.rt__table th,
+.rt__table td {
+  padding: 0.62rem 0.9rem 0.62rem 0;
+  text-align: left;
+  font-weight: 460;
+  vertical-align: middle;
+}
+
+.rt__table thead th {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule-hi);
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.rt__table tbody tr {
+  border-bottom: 1px solid color-mix(in srgb, var(--rule) 55%, transparent);
+  transition: background var(--fast) var(--ease);
+}
+
+.rt__table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.rt__table tbody tr:hover {
+  background: var(--tint-soft);
+}
+
+.rt__table tbody th {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.rt__unit {
+  color: var(--faint);
+  font-size: var(--t--2);
+}
+
+.rt__table .rt__r {
+  text-align: right;
+  padding-right: 0;
+}
+
+.rt__dim {
+  color: var(--muted);
+}
+
+.rt__side {
+  display: inline-block;
+  min-width: 4.6em;
+  padding: 0.16em 0.55em;
+  border-radius: var(--r-1);
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--muted);
+}
+
+.rt__side--long {
+  border-color: color-mix(in srgb, var(--pos) 30%, var(--rule));
+  color: var(--pos);
+}
+
+.rt__side--short {
+  border-color: color-mix(in srgb, var(--neg) 26%, var(--rule));
+  color: var(--neg);
+}
+
+.rt__pos {
+  color: var(--pos);
+}
+
+.rt__neg {
+  color: var(--neg);
+}
+
+/* Loss magnitude, drawn behind the number. Real data, relative scale. */
+.rt__table .rt__net {
+  position: relative;
+  isolation: isolate;
+  padding-left: 2.5rem;
+}
+
+.rt__meter {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: -1;
+  height: 1.6em;
+  width: var(--w);
+  border-radius: var(--r-1);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--neg) 16%, transparent)
+  );
+}
+
+/* Below this width the table is always wider than its container, so a
+   permanent right-edge fade is an honest affordance rather than a guess. */
+@media (max-width: 620px) {
+  .rt::after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    width: 2.5rem;
+    border-radius: 0 var(--r-3) var(--r-3) 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--panel));
+  }
+
+  .rt__scroll {
+    padding: 0.9rem;
+  }
+
+  .rt__table {
+    font-size: var(--t--1);
+  }
+
+  /* Keep the caption clear of the fade. */
+  .rt__caption {
+    padding-right: 2.5rem;
+  }
+}

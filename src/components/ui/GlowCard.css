@@ -1,0 +1,88 @@
+.glow {
+  --mx: 50%;
+  --my: 0%;
+  --rx: 0deg;
+  --ry: 0deg;
+
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--r-3);
+  background:
+    var(--sheen),
+    linear-gradient(180deg, var(--panel-hi), var(--panel));
+  box-shadow: var(--lift);
+  transition: box-shadow var(--med) var(--ease), transform var(--med) var(--ease-out);
+  transform-style: preserve-3d;
+}
+
+/* 1px gradient border, drawn as a mask so it stays crisp at any radius. */
+.glow__edge {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--rule-hi), var(--rule) 55%, transparent);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: background var(--med) var(--ease);
+}
+
+/* The cursor-following light. Opacity is the only thing that animates. */
+.glow__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--med) var(--ease);
+  background: radial-gradient(
+    22rem 22rem at var(--mx) var(--my),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 62%
+  );
+}
+
+.glow__body {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+}
+
+.glow.is-live {
+  transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry));
+}
+
+.glow.is-live:hover,
+.glow:focus-within {
+  box-shadow: var(--glow), var(--lift);
+}
+
+.glow.is-live:hover .glow__wash,
+.glow:focus-within .glow__wash {
+  opacity: 1;
+}
+
+.glow.is-live:hover .glow__edge,
+.glow:focus-within .glow__edge {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 55%, var(--rule-hi)),
+    var(--rule) 60%,
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    transform: none !important;
+  }
+}

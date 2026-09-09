@@ -1,0 +1,135 @@
+/* ------------------------------------------------------------------ *
+ * Design tokens.
+ * Dark is the primary identity; light is a fully specified alternate.
+ * Every colour, radius, shadow and step used anywhere resolves here.
+ * ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- surfaces --- */
+  --page: #08070c;
+  --page-soft: #0b0912;
+  --panel: #100e18;
+  --panel-hi: #16131f;
+  --rule: #241e33;
+  --rule-hi: #372e4d;
+
+  /* --- ink --- */
+  --text: #edeaf5;
+  --text-2: #cac4d8;
+  --muted: #9a93ae;
+  --faint: #746c89;
+
+  /* --- accents --- */
+  --accent: #9b6bff;
+  --accent-hi: #b795ff;
+  --accent-lo: #6d4ab8;
+  --accent-pale: #c9b6ff;
+  --blue: #5f8dff;
+  --blue-lo: #3a56a8;
+
+  /* --- data --- */
+  --pos: #56c79a;
+  --neg: #e8768d;
+
+  /* --- translucency (composited over --page) --- */
+  --glass: rgba(22, 19, 31, 0.62);
+  --glass-hi: rgba(30, 26, 43, 0.78);
+  --tint: rgba(155, 107, 255, 0.08);
+  --tint-soft: rgba(155, 107, 255, 0.04);
+  --hairline: rgba(255, 255, 255, 0.06);
+  --scrim: rgba(6, 5, 10, 0.72);
+
+  --glow: 0 0 0 1px rgba(155, 107, 255, 0.18), 0 18px 60px -20px rgba(120, 70, 240, 0.55);
+  --lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -32px rgba(0, 0, 0, 0.9);
+
+  /* --- gradients --- */
+  --sheen: linear-gradient(140deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 42%);
+  --accent-sweep: linear-gradient(90deg, var(--accent-lo), var(--accent), var(--blue));
+
+  /* --- type --- */
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --t--2: 0.6875rem;  /* 11 */
+  --t--1: 0.8125rem;  /* 13 */
+  --t-0:  0.9375rem;  /* 15 */
+  --t-1:  1.0625rem;  /* 17 */
+  --t-2:  1.25rem;    /* 20 */
+  --t-3:  clamp(1.375rem, 1.1rem + 1.1vw, 1.75rem);
+  --t-4:  clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+  --t-5:  clamp(2.5rem, 1.4rem + 5.2vw, 4.25rem);
+
+  --lh-tight: 1.08;
+  --lh-snug: 1.35;
+  --lh-body: 1.68;
+
+  /* --- space --- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: clamp(4.5rem, 9vw, 8.5rem);
+
+  /* --- geometry --- */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 14px;
+  --r-pill: 999px;
+
+  --measure: 68ch;
+  --wide: 1160px;
+  --nav-h: 58px;
+  --gutter: clamp(1.125rem, 4vw, 2.5rem);
+
+  /* --- motion --- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fast: 140ms;
+  --med: 260ms;
+  --slow: 620ms;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --page: #fbfafd;
+  --page-soft: #f4f2f8;
+  --panel: #ffffff;
+  --panel-hi: #ffffff;
+  --rule: #e3dfec;
+  --rule-hi: #cdc6dd;
+
+  --text: #17131f;
+  --text-2: #37304a;
+  --muted: #5d5673;
+  --faint: #837c95;
+
+  --accent: #6d3fe0;
+  --accent-hi: #5a2ecb;
+  --accent-lo: #b9a3f0;
+  --accent-pale: #4d27a8;
+  --blue: #2f5bd0;
+  --blue-lo: #a8bcf0;
+
+  --pos: #10795a;
+  --neg: #b4304c;
+
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-hi: rgba(255, 255, 255, 0.9);
+  --tint: rgba(109, 63, 224, 0.06);
+  --tint-soft: rgba(109, 63, 224, 0.03);
+  --hairline: rgba(23, 19, 31, 0.07);
+  --scrim: rgba(251, 250, 253, 0.72);
+
+  --glow: 0 0 0 1px rgba(109, 63, 224, 0.16), 0 18px 50px -22px rgba(109, 63, 224, 0.35);
+  --lift: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 18px 44px -30px rgba(23, 19, 31, 0.35);
+
+  --sheen: linear-gradient(140deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 45%);
+}

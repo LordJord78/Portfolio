@@ -1,0 +1,338 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: max(660px, 100svh);
+  padding-block: calc(var(--nav-h) + 3.5rem) 0;
+  overflow: clip;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------------- backdrop ---------------- */
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Painted immediately, so the fold is never empty while three.js loads. */
+.hero__grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: radial-gradient(120% 82% at 50% 26%, #000 12%, transparent 76%);
+  -webkit-mask-image: radial-gradient(120% 82% at 50% 26%, #000 12%, transparent 76%);
+  opacity: 0.9;
+}
+
+.hero__gl-wrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease);
+}
+
+.hero__gl-wrap.is-ready {
+  opacity: 1;
+}
+
+/* On wide screens the surface is pushed off-centre so the type column
+   sits on quiet ground rather than on top of the mesh. */
+@media (min-width: 1024px) {
+  .hero__gl-wrap {
+    left: 16%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero__gl-wrap {
+    left: 22%;
+  }
+}
+
+.hero__gl {
+  position: absolute;
+  inset: 0;
+}
+
+/* Keeps the type readable over whatever the surface is doing underneath. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      100deg,
+      var(--page) 0%,
+      color-mix(in srgb, var(--page) 78%, transparent) 26%,
+      transparent 58%
+    ),
+    linear-gradient(to bottom, var(--page) 0%, transparent 22%, transparent 62%, var(--page) 99%);
+}
+
+/* ---------------- content ---------------- */
+
+.hero__in {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  align-self: flex-start;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.05em;
+  color: var(--text-2);
+  text-transform: uppercase;
+}
+
+.hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--accent) 80%, transparent);
+  animation: pulse-dot 2.6s var(--ease) infinite;
+}
+
+.hero__name {
+  margin-top: var(--s-5);
+  font-size: var(--t-5);
+  font-weight: 520;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.042em;
+}
+
+.hero__tag {
+  max-width: 30ch;
+  margin-top: var(--s-5);
+  font-size: clamp(1.125rem, 0.95rem + 0.8vw, 1.5rem);
+  font-weight: 480;
+  line-height: 1.42;
+  letter-spacing: -0.017em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.hero__sum {
+  max-width: 52ch;
+  margin-top: var(--s-4);
+  font-size: var(--t-0);
+  line-height: var(--lh-body);
+  color: var(--muted);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+}
+
+/* ---------------- annotations ---------------- */
+
+.hero__note {
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--nav-h) + 2.4rem);
+  right: var(--gutter);
+  max-width: 21ch;
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  line-height: 1.6;
+  color: var(--faint);
+  text-align: right;
+  pointer-events: none;
+}
+
+.hero__foot {
+  position: relative;
+  order: 3;
+  z-index: 2;
+  width: 100%;
+  padding-block: var(--s-6) var(--s-7);
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hero__stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: var(--s-4) var(--s-4) 0 0;
+  position: relative;
+}
+
+.hero__stats li + li {
+  padding-left: var(--s-4);
+}
+
+.hero__stats li + li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--s-4);
+  bottom: 0.2rem;
+  width: 1px;
+  background: var(--rule);
+}
+
+.hero__stat-v {
+  font-size: var(--t-1);
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.hero__stat-k {
+  font-size: var(--t--2);
+  color: var(--faint);
+  letter-spacing: 0.02em;
+}
+
+/* ---------------- scroll cue ---------------- */
+
+.hero__cue {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  width: 40px;
+  height: 46px;
+  display: grid;
+  place-items: end center;
+}
+
+.hero__cue-rail {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(to bottom, transparent, var(--rule-hi));
+  overflow: hidden;
+  position: relative;
+}
+
+.hero__cue-rail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--accent));
+  transform-origin: 50% 0;
+  animation: cue 2.4s var(--ease) infinite;
+}
+
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* ---------------- responsive ---------------- */
+
+@media (max-width: 900px) {
+  .hero__scrim {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--page) 55%, transparent) 0%,
+        color-mix(in srgb, var(--page) 80%, transparent) 42%,
+        var(--page) 88%
+      );
+  }
+
+  .hero__note {
+    position: static;
+    order: 2;
+    max-width: none;
+    margin: 0 auto;
+    padding: 0 var(--gutter) var(--s-4);
+    width: 100%;
+    max-inline-size: var(--wide);
+    text-align: left;
+  }
+
+  .hero__note-drag {
+    display: none;
+  }
+
+  .hero__tag {
+    max-width: 34ch;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: max(600px, 100svh);
+    padding-top: calc(var(--nav-h) + 2rem);
+  }
+
+  .hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .hero__stats li {
+    padding: var(--s-3) var(--s-3) var(--s-3) 0;
+  }
+
+  .hero__stats li:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .hero__stats li:nth-child(even) {
+    padding-left: var(--s-4);
+  }
+
+  .hero__stats li:nth-child(odd)::before {
+    display: none;
+  }
+
+  .hero__stats li:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: var(--s-3);
+    bottom: var(--s-3);
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .hero__cue {
+    display: none;
+  }
+}

@@ -1,0 +1,93 @@
+.aura {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.aura__blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  /* Soft by construction — no blur() filter, which would repaint a very
+     large area on every frame. */
+  will-change: transform;
+}
+
+.aura__blob--a {
+  width: 62vmax;
+  height: 62vmax;
+  top: -26vmax;
+  right: -14vmax;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    transparent 66%
+  );
+  animation: aura-a 34s var(--ease) infinite alternate;
+}
+
+.aura__blob--b {
+  width: 52vmax;
+  height: 52vmax;
+  bottom: -22vmax;
+  left: -16vmax;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--blue) 11%, transparent),
+    transparent 68%
+  );
+  animation: aura-b 46s var(--ease) infinite alternate;
+}
+
+[data-theme="light"] .aura__blob--a,
+[data-theme="light"] .aura__blob--b {
+  opacity: 0.5;
+}
+
+@keyframes aura-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-9vmax, 7vmax, 0) scale(1.12);
+  }
+}
+
+@keyframes aura-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+  to {
+    transform: translate3d(8vmax, -6vmax, 0) scale(1);
+  }
+}
+
+/* Held still rather than removed: the colour still belongs on the page. */
+@media (prefers-reduced-motion: reduce) {
+  .aura__blob {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+[data-motion="reduced"] .aura__blob {
+  animation: none;
+  will-change: auto;
+}
+
+/* Two large composited layers are not worth it on a phone, where the hero
+   canvas is already the expensive thing on screen. */
+@media (max-width: 640px) {
+  .aura__blob--b {
+    display: none;
+  }
+
+  .aura__blob--a {
+    animation: none;
+    will-change: auto;
+    opacity: 0.7;
+  }
+}

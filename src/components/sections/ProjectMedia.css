@@ -1,0 +1,11 @@
+/* Footage shares the diagram frame, but the blueprint grid over a real
+   image reads as dirt on the lens, so it is dialled most of the way back. */
+.pv__frame--media::after {
+  opacity: 0.12;
+}
+
+.pv--media {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--page-soft);
+}

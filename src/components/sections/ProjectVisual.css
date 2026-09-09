@@ -1,0 +1,134 @@
+.pv__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-2);
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(90% 120% at 50% 0%, var(--tint), transparent 70%),
+    var(--page-soft);
+}
+
+.pv__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.6;
+}
+
+.pv {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pv__axis {
+  stroke: var(--rule-hi);
+  stroke-width: 1;
+}
+
+/* ---- order book ---- */
+
+.pv__bar {
+  transform-origin: 50% 104px;
+  animation: pv-grow 620ms var(--ease-out) both;
+  animation-delay: var(--d);
+}
+
+.pv__bar.is-bid {
+  fill: color-mix(in srgb, var(--accent) 62%, transparent);
+}
+
+.pv__bar.is-ask {
+  fill: color-mix(in srgb, var(--blue) 55%, transparent);
+}
+
+.pv__mid {
+  stroke: var(--accent-pale);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  opacity: 0.55;
+}
+
+@keyframes pv-grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* ---- voxel ---- */
+
+.pv__cube {
+  animation: fade 500ms var(--ease) both;
+  animation-delay: var(--d);
+}
+
+.pv__cube.is-gone {
+  opacity: 0.14;
+}
+
+.pv__top {
+  fill: color-mix(in srgb, var(--accent) 46%, transparent);
+}
+
+.pv__left {
+  fill: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.pv__right {
+  fill: color-mix(in srgb, var(--blue) 20%, transparent);
+}
+
+.pv__cube path {
+  stroke: color-mix(in srgb, var(--accent-pale) 30%, transparent);
+  stroke-width: 0.6;
+}
+
+/* ---- gamma ---- */
+
+.pv__curve {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: pv-draw 1400ms var(--ease-out) 120ms forwards;
+}
+
+.pv__area {
+  fill: color-mix(in srgb, var(--accent) 12%, transparent);
+  animation: fade 900ms var(--ease) 600ms both;
+}
+
+.pv__flip-line {
+  stroke: var(--blue);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  opacity: 0.7;
+}
+
+.pv__flip-dot {
+  fill: var(--page);
+  stroke: var(--accent-pale);
+  stroke-width: 1.6;
+}
+
+.pv__flip {
+  animation: fade 700ms var(--ease) 1100ms both;
+}
+
+@keyframes pv-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

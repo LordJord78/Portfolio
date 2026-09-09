@@ -1,0 +1,70 @@
+.bp {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  pointer-events: none;
+}
+
+.bp__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--blue) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--blue) 22%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: fade 300ms var(--ease) both;
+}
+
+.bp__toast {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule-hi);
+  background: var(--glass-hi);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--muted);
+  font-size: var(--t--2);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  animation: rise 380ms var(--ease-out) both;
+}
+
+.bp__toast-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: pulse-dot 1.6s var(--ease) infinite;
+}
+
+.bp__toast-key {
+  color: var(--accent-pale);
+}
+
+/* Layout bounds, drawn on the real page rather than on the overlay. */
+[data-egg="on"] section,
+[data-egg="on"] article,
+[data-egg="on"] header,
+[data-egg="on"] footer {
+  outline: 1px dashed color-mix(in srgb, var(--blue) 45%, transparent);
+  outline-offset: -1px;
+}
+
+[data-egg="on"] .u-container {
+  box-shadow: inset 1px 0 0 color-mix(in srgb, var(--accent) 35%, transparent),
+    inset -1px 0 0 color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+@media (max-width: 520px) {
+  .bp__toast {
+    font-size: 10px;
+    padding: 0.4rem 0.7rem;
+  }
+}

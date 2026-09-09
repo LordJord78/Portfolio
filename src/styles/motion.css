@@ -1,0 +1,185 @@
+/* ------------------------------------------------------------------ *
+ * Motion. Everything here is transform/opacity only so it stays on
+ * the compositor, and everything collapses under reduced motion.
+ * ------------------------------------------------------------------ */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.72);
+  }
+}
+
+/* --- scroll reveal ---------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y, 16px), 0);
+  transition:
+    opacity var(--slow) var(--ease-out),
+    transform var(--slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* --- staggered words -------------------------------------------- */
+
+.split {
+  display: inline;
+}
+
+.split__w {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.42em, 0);
+  animation: rise 720ms var(--ease-out) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* --- entrance sequence ------------------------------------------- */
+
+.enter {
+  opacity: 0;
+  animation: rise 760ms var(--ease-out) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+.enter-fade {
+  opacity: 0;
+  animation: fade 900ms var(--ease) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* --- reduced motion ---------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .split__w,
+  .enter,
+  .enter-fade {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Same collapse when the app has detected reduced motion in JS, so the
+   canvas hero and the CSS agree on one source of truth. */
+[data-motion="reduced"] .reveal,
+[data-motion="reduced"] .split__w,
+[data-motion="reduced"] .enter,
+[data-motion="reduced"] .enter-fade {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* --- scroll-linked motion ----------------------------------------- *
+ * Progressive enhancement. Where the browser has scroll-driven
+ * animations these run entirely off the main thread; everywhere else
+ * the @supports block is skipped and the element simply sits still.
+ * No JS, no scroll listener, nothing to clean up.
+ * ------------------------------------------------------------------ */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .par {
+      animation: par-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    .par--soft {
+      animation-name: par-drift-soft;
+    }
+
+    /* Hero copy settles back as the fold leaves, so the surface behind it
+       is what you are left looking at. */
+    .par-out {
+      animation: par-out linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 92%;
+    }
+  }
+}
+
+@keyframes par-drift {
+  from {
+    translate: 0 26px;
+  }
+  to {
+    translate: 0 -26px;
+  }
+}
+
+@keyframes par-drift-soft {
+  from {
+    translate: 0 14px;
+  }
+  to {
+    translate: 0 -14px;
+  }
+}
+
+@keyframes par-out {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0.15;
+    translate: 0 -34px;
+  }
+}
+
+[data-motion="reduced"] .par,
+[data-motion="reduced"] .par--soft,
+[data-motion="reduced"] .par-out {
+  animation: none !important;
+  translate: none !important;
+  opacity: 1 !important;
+}

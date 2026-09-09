@@ -1,0 +1,148 @@
+.ct {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-3);
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(80% 120% at 12% 0%, var(--tint), transparent 62%),
+    linear-gradient(180deg, var(--panel-hi), var(--panel));
+  box-shadow: var(--lift);
+}
+
+.ct__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(90% 120% at 90% 100%, #000, transparent 72%);
+  -webkit-mask-image: radial-gradient(90% 120% at 90% 100%, #000, transparent 72%);
+}
+
+.ct__body {
+  position: relative;
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.ct__lead {
+  max-width: 52ch;
+  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem);
+  line-height: 1.55;
+  letter-spacing: -0.014em;
+  color: var(--text-2);
+}
+
+/* ---------------- email ---------------- */
+
+.ct__email {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-top: var(--s-6);
+}
+
+.ct__addr {
+  position: relative;
+  font-size: clamp(1.25rem, 0.9rem + 2vw, 2.25rem);
+  letter-spacing: -0.035em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.ct__addr::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 1px;
+  background: var(--accent-sweep);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 520ms var(--ease-out);
+}
+
+.ct__addr:hover::after,
+.ct__addr:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.ct__copy {
+  padding: 0.42rem 0.85rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule-hi);
+  background: var(--page-soft);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+}
+
+.ct__copy:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.ct__copy-in {
+  display: inline-block;
+  min-width: 4.2em;
+  text-align: center;
+}
+
+/* ---------------- socials ---------------- */
+
+.ct__socials {
+  list-style: none;
+  margin: var(--s-7) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  max-width: 34rem;
+}
+
+.ct__socials a {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: 0.9rem 0.2rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--text-2);
+  transition: color var(--fast) var(--ease), padding-left var(--med) var(--ease-out);
+}
+
+.ct__socials a:hover {
+  color: var(--text);
+  padding-left: 0.6rem;
+}
+
+.ct__social-l {
+  flex: none;
+  min-width: 6.5rem;
+  font-size: var(--t-0);
+}
+
+.ct__social-h {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--t--1);
+  color: var(--faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ct__social-ic {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  color: var(--accent);
+  opacity: 0.5;
+  transition: opacity var(--fast) var(--ease), translate var(--med) var(--ease-out);
+}
+
+.ct__socials a:hover .ct__social-ic {
+  opacity: 1;
+  translate: 2px -2px;
+}

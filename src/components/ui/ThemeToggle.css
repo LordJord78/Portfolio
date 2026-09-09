@@ -1,0 +1,51 @@
+.tt {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  color: var(--muted);
+  transition: color var(--fast) var(--ease), background var(--fast) var(--ease),
+    border-color var(--fast) var(--ease);
+}
+
+.tt:hover {
+  color: var(--text);
+  background: var(--tint);
+  border-color: var(--rule);
+}
+
+.tt__track {
+  position: relative;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.tt__ic {
+  position: absolute;
+  inset: 0;
+  width: 16px;
+  height: 16px;
+  transition: opacity var(--med) var(--ease), rotate var(--med) var(--ease-out),
+    scale var(--med) var(--ease-out);
+}
+
+.tt__ic--sun {
+  opacity: 0;
+  rotate: -70deg;
+  scale: 0.6;
+}
+
+[data-theme="light"] .tt__ic--moon {
+  opacity: 0;
+  rotate: 70deg;
+  scale: 0.6;
+}
+
+[data-theme="light"] .tt__ic--sun {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}

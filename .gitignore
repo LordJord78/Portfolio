@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+
+# The raw screen capture src/assets/trench.mp4 was cut from. Kept on disk,
+# out of the repository: 15 MB of source footage that nothing imports.
+src/assets/2026-09-08 18-50-53 - Trim.mp4
+
+# Working notes for the agent that finished the site, not part of it.
+claude-code-handoff.md

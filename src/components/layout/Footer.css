@@ -1,0 +1,45 @@
+.ft {
+  position: relative;
+  padding-block: var(--s-7) var(--s-6);
+  border-top: 1px solid var(--rule);
+  background: linear-gradient(180deg, transparent, var(--tint-soft));
+}
+
+.ft__in {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+}
+
+.ft__name {
+  font-size: var(--t-1);
+  font-weight: 540;
+}
+
+.ft__meta,
+.ft__legal {
+  font-size: var(--t--2);
+  color: var(--faint);
+  letter-spacing: 0.02em;
+}
+
+.ft__meta {
+  margin-top: 0.35rem;
+}
+
+.ft__links {
+  display: flex;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+  font-size: var(--t-0);
+}
+
+@media (max-width: 700px) {
+  .ft__in {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+}

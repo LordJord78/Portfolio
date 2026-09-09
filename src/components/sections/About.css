@@ -1,0 +1,149 @@
+.ab {
+  display: grid;
+  grid-template-columns: minmax(0, 270px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* ---------------- portrait ---------------- */
+
+.ab__portrait {
+  position: relative;
+  margin: 0;
+  width: min(100%, 250px);
+  aspect-ratio: 1;
+  border-radius: var(--r-3);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.ab__portrait picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ab__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.03);
+  transition: filter var(--slow) var(--ease), scale var(--slow) var(--ease-out);
+}
+
+.ab__portrait:hover img {
+  filter: saturate(1) contrast(1.05);
+  scale: 1.025;
+}
+
+/* A tinted edge so the photograph sits in the palette rather than beside it. */
+.ab__portrait-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px var(--rule-hi),
+    inset 0 -54px 60px -52px color-mix(in srgb, var(--accent) 40%, transparent);
+  pointer-events: none;
+}
+
+/* ---------------- pull quote ---------------- */
+
+.ab__quote {
+  max-width: 250px;
+  margin: var(--s-5) 0 0;
+  padding-left: var(--s-4);
+  border-left: 2px solid var(--accent);
+}
+
+.ab__quote p {
+  font-size: var(--t-1);
+  line-height: 1.45;
+  letter-spacing: -0.014em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.ab__quote footer {
+  margin-top: 0.6rem;
+  font-size: var(--t--2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ---------------- prose + principles ---------------- */
+
+.ab__prose {
+  font-size: var(--t-1);
+}
+
+.ab__principles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1px;
+  list-style: none;
+  margin: var(--s-7) 0 0;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-3);
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.ab__principles li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--s-5);
+  background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+  transition: background var(--med) var(--ease);
+}
+
+.ab__principles li:hover {
+  background: linear-gradient(180deg, var(--panel-hi), var(--tint));
+}
+
+.ab__p-k {
+  font-size: var(--t-0);
+  font-weight: 540;
+  color: var(--text);
+  letter-spacing: -0.014em;
+}
+
+.ab__p-v {
+  font-size: var(--t--1);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---------------- responsive ---------------- */
+
+@media (max-width: 900px) {
+  .ab {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ab__side {
+    display: grid;
+    grid-template-columns: minmax(0, 170px) minmax(0, 1fr);
+    gap: var(--s-5);
+    align-items: center;
+  }
+
+  .ab__quote {
+    max-width: none;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .ab__side {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+
+  .ab__portrait {
+    width: 160px;
+  }
+}

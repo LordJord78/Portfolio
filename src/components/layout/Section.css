@@ -1,0 +1,65 @@
+.sec {
+  position: relative;
+  padding-block: var(--s-10);
+}
+
+.sec + .sec {
+  padding-top: 0;
+}
+
+.sec__head {
+  margin-bottom: var(--s-7);
+}
+
+.sec__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-bottom: var(--s-3);
+}
+
+/* The rule under the eyebrow draws itself in when the header reveals. */
+.sec__top::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rule-hi), var(--rule) 45%, transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 900ms var(--ease-out) 120ms;
+}
+
+.sec__head.is-in .sec__top::after {
+  transform: scaleX(1);
+}
+
+[data-motion="reduced"] .sec__top::after {
+  transform: scaleX(1);
+  transition: none;
+}
+
+.sec__title {
+  max-width: 34ch;
+  margin-top: var(--s-5);
+  font-size: var(--t-4);
+  letter-spacing: -0.028em;
+}
+
+.sec__aside {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sec__lede {
+  margin-top: var(--s-4);
+  color: var(--muted);
+  font-size: var(--t-1);
+}
