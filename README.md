@@ -65,6 +65,18 @@ pointed at it later.
   flashes as Web Animations opacity fades. Rows are rank-anchored so the DOM
   order never changes. It pauses off screen and in hidden tabs, and renders a
   single static frame under reduced motion.
+- The Gamma regime tool card draws dealer gamma exposure by strike — the
+  figure that tool prints each morning. `GammaProfile.js` runs the same
+  maths the tool runs: Black-Scholes gamma computed in-house rather than
+  taken from a vendor's greeks, GEX per strike as gamma x OI x 100 x S² x
+  1%, the flip located as the zero crossing of net GEX across hypothetical
+  spot levels, and the walls as the gamma-weighted OI peak on each side.
+  The **chain is synthetic** — shaped, deterministic, no random component,
+  so the figure is identical on every render — and the figure says
+  `SYNTHETIC CHAIN` on its face. The JS was checked against a Python
+  reference of the tool's own functions: net GEX, the flip and both walls
+  agree to floating-point precision. Its 260×146 viewBox is 16:9 so the
+  card lines up with the video on the card beside it.
 - The About portrait is a `<picture>` with a WebP source and PNG fallback.
   Because `<picture>` only falls back on an unsupported *type*, not on a
   failed decode, the `<img>` also swaps to the PNG on `error`.
@@ -150,6 +162,7 @@ src/
     sections/
       Projects.jsx  ProjectVisual.jsx  ProjectMedia.jsx
       OrderBook.jsx      live synthetic ladder on the featured card
+      GammaProfile.js    Black-Scholes GEX maths for the gamma figure
       Research.jsx  ResultsTable.jsx
       Skills.jsx  Background.jsx  About.jsx  Contact.jsx
   data/

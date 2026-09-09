@@ -72,5 +72,12 @@ export const PROJECTS = [
       "Above the flip, dealer hedging damps volatility; below it, the same hedging amplifies it. The tool computes exposure across the chain, finds where the sign changes, and classifies the current regime from it.",
     stack: ["Python", "Options chain", "Dealer positioning"],
     links: [],
+    details: [
+      "Gamma is computed in-house from Black-Scholes rather than taken from the vendor's greeks.",
+      "Exposure is aggregated over the three nearest expirations and strikes within 6% of spot; implied volatility outside 1–300% is discarded rather than flagged, which is what the first version got wrong — it labelled the bad quotes and still let them into the sum.",
+      "Every morning it writes down a falsifiable prediction — mean-reverting, trend-persistent, or no edge — and scores it against the session's realised efficiency ratio, with a separation test once there are enough sessions to run one.",
+      "The regime thresholds ship uncalibrated, and say so in the source: they are placeholder numbers until twenty-odd scored sessions say where the real boundaries are.",
+      "It will not predict direction. Gamma exposure measures whether moves dampen or extend, and the dealer sign convention is an assumption about customer flow — no public data says who holds which side.",
+    ],
   },
 ];

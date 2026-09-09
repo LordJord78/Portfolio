@@ -59,42 +59,108 @@
   stroke-width: 0.6;
 }
 
-/* ---- gamma ---- */
+/* ---- gamma exposure profile ---- */
 
-.pv__curve {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
-  animation: pv-draw 1400ms var(--ease-out) 120ms forwards;
+/* Bars grow out of the zero line, positive up and negative down, so one
+   transform-origin serves both. */
+/* --zero is the y of the zero line, handed down from the component so the
+   growth origin cannot drift from the geometry. */
+.pv__g-bar {
+  transform-origin: 50% var(--zero);
+  animation: pv-grow 520ms var(--ease-out) both;
+  animation-delay: var(--d);
 }
 
-.pv__area {
-  fill: color-mix(in srgb, var(--accent) 12%, transparent);
-  animation: fade 900ms var(--ease) 600ms both;
+.pv__g-bar.is-pos {
+  fill: color-mix(in srgb, var(--accent) 72%, transparent);
 }
 
-.pv__flip-line {
-  stroke: var(--blue);
-  stroke-width: 1;
-  stroke-dasharray: 3 4;
-  opacity: 0.7;
+.pv__g-bar.is-neg {
+  fill: color-mix(in srgb, var(--neg) 62%, transparent);
 }
 
-.pv__flip-dot {
-  fill: var(--page);
-  stroke: var(--accent-pale);
-  stroke-width: 1.6;
-}
-
-.pv__flip {
-  animation: fade 700ms var(--ease) 1100ms both;
-}
-
-@keyframes pv-draw {
-  to {
-    stroke-dashoffset: 0;
+@keyframes pv-grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
   }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Sizes are viewBox units, multiplied by however wide the card renders —
+   about 1.3x at phone width and 2x on the desktop grid. Chosen so the
+   smallest label still lands near 9px on a phone. */
+.pv__g-regime,
+.pv__g-net,
+.pv__g-tag,
+.pv__g-note {
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: 0.06em;
+  animation: fade 600ms var(--ease) 120ms both;
+}
+
+.pv__g-tag {
+  font-size: 7px;
+  fill: var(--faint);
+}
+
+.pv__g-note {
+  font-size: 6.6px;
+  letter-spacing: 0.1em;
+  fill: var(--faint);
+  opacity: 0.75;
+}
+
+.pv__g-regime {
+  fill: var(--accent-pale);
+}
+
+.pv__g-net {
+  fill: var(--muted);
+}
+
+.pv__g-tag.is-flip {
+  fill: var(--accent-pale);
+}
+
+.pv__g-spot {
+  stroke: var(--rule-hi);
+  stroke-width: 1;
+}
+
+.pv__g-flip {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 2.5 3.5;
+}
+
+.pv__g-dot {
+  fill: var(--page);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.pv__g-mark {
+  animation: fade 700ms var(--ease) 900ms both;
+}
+
+.pv__g-mark--flip {
+  animation-delay: 1150ms;
+}
+
+/* The site collapses motion in two places that must agree. */
+[data-motion="reduced"] .pv__g-bar,
+[data-motion="reduced"] .pv__g-mark,
+[data-motion="reduced"] .pv__g-regime,
+[data-motion="reduced"] .pv__g-net,
+[data-motion="reduced"] .pv__g-tag,
+[data-motion="reduced"] .pv__g-note,
+[data-motion="reduced"] .pv__cube {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
