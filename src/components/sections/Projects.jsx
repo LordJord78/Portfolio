@@ -5,6 +5,7 @@ import Button from "../ui/Button.jsx";
 import GlowCard from "../ui/GlowCard.jsx";
 import ProjectVisual from "./ProjectVisual.jsx";
 import ProjectMedia from "./ProjectMedia.jsx";
+import OrderBook from "./OrderBook.jsx";
 import { PROJECTS } from "../../data/projects.js";
 import "./Projects.css";
 
@@ -87,9 +88,9 @@ function Featured({ project }) {
         </div>
 
         <div className="pj__feature-visual par par--soft">
-          <ProjectVisual motif={project.motif} />
+          <OrderBook />
           <p className="pj__caption u-mono">
-            Book depth at one instant — illustrative
+            Synthetic ES book — illustrative, not live market data
           </p>
         </div>
       </GlowCard>

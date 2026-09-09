@@ -20,6 +20,19 @@ const PRINCIPLES = [
   },
 ];
 
+/* <picture> only falls back when a source's *type* is unsupported. If the
+   browser picks the WebP and then fails to decode it — a corrupt cache, a
+   proxy that rewrote the bytes, an old renderer — the <img> errors and
+   stays blank. So on error the WebP source is dropped and the PNG is
+   requested directly. Guarded so a PNG failure cannot loop. */
+function onPortraitError(e) {
+  const img = e.currentTarget;
+  if (img.dataset.fallback) return;
+  img.dataset.fallback = "png";
+  img.parentElement?.querySelector("source")?.remove();
+  img.src = headshotPng;
+}
+
 export default function About() {
   return (
     <Section
@@ -41,6 +54,7 @@ export default function About() {
                 height="329"
                 loading="lazy"
                 decoding="async"
+                onError={onPortraitError}
               />
             </picture>
             <span className="ab__portrait-edge" aria-hidden="true" />

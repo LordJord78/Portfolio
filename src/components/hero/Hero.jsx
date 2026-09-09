@@ -2,20 +2,14 @@ import { Suspense, lazy, useState } from "react";
 import Button from "../ui/Button.jsx";
 import SplitText from "../ui/SplitText.jsx";
 import { NAME, ROLE, SUMMARY, TAGLINE } from "../../data/profile.js";
+import { HERO_STATS } from "../../data/research.js";
 import { PALETTE } from "../../theme.js";
 import "./Hero.css";
 
-/* three.js is ~160 kB gzipped — the largest thing on the page by far, and
+/* three.js is ~120 kB gzipped — the largest thing on the page by far, and
    nothing above the fold depends on it. Split it out so first paint is the
    CSS backdrop and the type. */
 const DepthSurface = lazy(() => import("./DepthSurface.jsx"));
-
-const STATS = [
-  { v: "20.6 GB", k: "order-book data" },
-  { v: "47,958,325", k: "bars reconstructed" },
-  { v: "5", k: "walk-forward folds" },
-  { v: "0", k: "lookahead violations" },
-];
 
 export default function Hero({ reduced, theme }) {
   const [ready, setReady] = useState(false);
@@ -72,7 +66,7 @@ export default function Hero({ reduced, theme }) {
 
       <div className="u-container hero__foot">
         <ul className="hero__stats enter-fade" style={{ "--d": "880ms" }}>
-          {STATS.map((s) => (
+          {HERO_STATS.map((s) => (
             <li key={s.k}>
               <span className="hero__stat-v u-mono u-num">{s.v}</span>
               <span className="hero__stat-k">{s.k}</span>

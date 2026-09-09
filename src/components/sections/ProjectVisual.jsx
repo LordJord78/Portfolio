@@ -1,45 +1,10 @@
 import { useMemo } from "react";
 import "./ProjectVisual.css";
 
-/* Decorative diagrams, one per project. They illustrate the shape of the
-   problem — they are not screenshots and are not presented as data. */
-
-function Book() {
-  /* A static depth profile: bid side, spread, ask side. */
-  const bars = useMemo(() => {
-    const n = 26;
-    return Array.from({ length: n }, (_, i) => {
-      const d = Math.abs(i - (n - 1) / 2);
-      const shape = Math.exp(-Math.pow((d - 4.2) / 5, 2)) * (1 - Math.exp(-d / 1.1));
-      /* Deterministic wobble so the figure is identical on every render. */
-      const wobble = 0.72 + 0.28 * Math.abs(Math.sin(i * 2.399));
-      return { h: Math.max(0.06, shape * wobble), bid: i < (n - 1) / 2 };
-    });
-  }, []);
-
-  return (
-    <svg viewBox="0 0 260 120" className="pv pv--book" role="img" aria-hidden="true">
-      <line x1="0" y1="104.5" x2="260" y2="104.5" className="pv__axis" />
-      {bars.map((b, i) => {
-        const w = 260 / bars.length;
-        const h = b.h * 84;
-        return (
-          <rect
-            key={i}
-            x={i * w + 1.4}
-            y={104 - h}
-            width={w - 2.8}
-            height={h}
-            rx="1"
-            className={`pv__bar ${b.bid ? "is-bid" : "is-ask"}`}
-            style={{ "--d": `${i * 34}ms` }}
-          />
-        );
-      })}
-      <line x1="130" y1="8" x2="130" y2="104" className="pv__mid" />
-    </svg>
-  );
-}
+/* Decorative diagrams, one per project card. They illustrate the shape of
+   the problem — they are not screenshots and are not presented as data.
+   The featured ES-ML-Trader card draws a live ladder instead; see
+   OrderBook.jsx. */
 
 function Voxel() {
   /* Isometric block field with one column knocked out. */
@@ -118,7 +83,7 @@ function Gamma() {
   );
 }
 
-const MOTIFS = { book: Book, voxel: Voxel, gamma: Gamma };
+const MOTIFS = { voxel: Voxel, gamma: Gamma };
 
 export default function ProjectVisual({ motif }) {
   const Motif = MOTIFS[motif];

@@ -31,40 +31,6 @@
   stroke-width: 1;
 }
 
-/* ---- order book ---- */
-
-.pv__bar {
-  transform-origin: 50% 104px;
-  animation: pv-grow 620ms var(--ease-out) both;
-  animation-delay: var(--d);
-}
-
-.pv__bar.is-bid {
-  fill: color-mix(in srgb, var(--accent) 62%, transparent);
-}
-
-.pv__bar.is-ask {
-  fill: color-mix(in srgb, var(--blue) 55%, transparent);
-}
-
-.pv__mid {
-  stroke: var(--accent-pale);
-  stroke-width: 1;
-  stroke-dasharray: 3 4;
-  opacity: 0.55;
-}
-
-@keyframes pv-grow {
-  from {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
-
 /* ---- voxel ---- */
 
 .pv__cube {

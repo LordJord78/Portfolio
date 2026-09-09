@@ -19,8 +19,10 @@ npm run preview  # serve the production build locally
 
 1. **Domain.** `.env` sets `VITE_SITE_URL`, which is substituted into
    `index.html` at build time for the canonical URL, the Open Graph tags and
-   the JSON-LD. It currently reads `https://REPLACE-WITH-YOUR-DOMAIN`. This is
-   the only placeholder left in the repository.
+   the JSON-LD. It is currently empty, so those resolve to root-relative
+   paths: the page works, but link previews have no absolute image URL
+   until the real origin is set (in `.env` or as a host environment
+   variable).
 2. **Gamma screenshot (optional).** The Gamma regime tool card shows a
    generated diagram, not a screenshot. To use a real one, give the project a
    `media` entry in `src/data/projects.js` — `{ src, poster, alt }`, the same
@@ -44,10 +46,28 @@ pointed at it later.
   scrolls out of view. The 15 MB source capture stays out of the repository —
   see `.gitignore`.
 - The hero is a WebGL limit-order-book depth surface: price across, time
-  receding, resting size as height, drawn by a custom GLSL shader.
+  receding, resting size as height, drawn by a custom GLSL shader. The newest
+  snapshot is the near edge; every 125 ms a row is pushed there and the
+  oldest dropped off the far edge, while the mesh slides toward the far edge
+  by the fraction of a row elapsed — so the rewrite lands exactly where the
+  slide already was and nothing steps. Resting size carries over between
+  snapshots (per-column AR(1) noise, decaying blocks, an eased mid), which is
+  what makes it read as ridges of depth rather than a spike field.
   **The data is synthetic** — a shaped random walk, not a replay of a real
   session — and the page says so on screen. If that label is ever removed, the
   surface should be driven by real data first.
+- The ES-ML-Trader card carries a live order-book ladder (`OrderBook.jsx`),
+  also **synthetic** and labelled as such: size mean-reverts around a shaped
+  profile, aggressive orders eat the touch and shift the book a tick, blocks
+  arrive and decay. React renders the skeleton once; one rAF loop eases every
+  displayed value toward its target and writes to the DOM directly — depth
+  bars as `transform: scaleX`, text only when a rounded value changes, event
+  flashes as Web Animations opacity fades. Rows are rank-anchored so the DOM
+  order never changes. It pauses off screen and in hidden tabs, and renders a
+  single static frame under reduced motion.
+- The About portrait is a `<picture>` with a WebP source and PNG fallback.
+  Because `<picture>` only falls back on an unsupported *type*, not on a
+  failed decode, the `<img>` also swaps to the PNG on `error`.
 - three.js is code-split behind `React.lazy`, so the initial bundle is ~62 kB
   gzipped and the ~118 kB three.js chunk loads after first paint. The hero
   render loop stops when the tab is hidden or the hero scrolls out of view, and
@@ -128,7 +148,8 @@ src/
       CommandPalette.jsx ⌘K navigation
       ThemeToggle.jsx  Blueprint.jsx
     sections/
-      Projects.jsx  ProjectVisual.jsx
+      Projects.jsx  ProjectVisual.jsx  ProjectMedia.jsx
+      OrderBook.jsx      live synthetic ladder on the featured card
       Research.jsx  ResultsTable.jsx
       Skills.jsx  Background.jsx  About.jsx  Contact.jsx
   data/

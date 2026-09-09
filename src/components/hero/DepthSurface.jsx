@@ -3,25 +3,32 @@ import * as THREE from "three";
 
 /* ------------------------------------------------------------------ *
  * A limit-order-book depth surface: price across, time receding,
- * resting size as height.
+ * resting size as height. The newest snapshot is the near edge; older
+ * ones slide away from the camera and dim with age.
  *
  * The data is SYNTHETIC — a shaped random walk, not a replay of a real
  * session — and the hero says so on screen. If that label is ever
  * removed, drive this from real data first.
+ *
+ * Motion model: every STEP_MS a new row is pushed onto the near edge and
+ * the oldest row dropped off the far edge. Between steps the whole mesh
+ * slides toward the far edge by the fraction of a row elapsed, so when
+ * the geometry is rewritten every vertex lands exactly where the slide
+ * had already carried it. Nothing ever steps.
  * ------------------------------------------------------------------ */
 
 const VERT = /* glsl */ `
   uniform vec2 uPointer;
   uniform float uHeight;
-  attribute float aDepth;
+  attribute float aAge;
 
   varying float vH;
-  varying float vDepth;
+  varying float vAge;
   varying float vGlow;
 
   void main() {
     vH = clamp(position.y / uHeight, 0.0, 1.4);
-    vDepth = aDepth;
+    vAge = aAge;
 
     float d = distance(vec2(position.x, position.z), uPointer);
     vGlow = 1.0 - smoothstep(0.0, 7.5, d);
@@ -41,16 +48,17 @@ const FRAG = /* glsl */ `
   uniform float uAdditive;
 
   varying float vH;
-  varying float vDepth;
+  varying float vAge;
   varying float vGlow;
 
   void main() {
     vec3 c = mix(uLow, uMid, smoothstep(0.02, 0.55, vH));
     c = mix(c, uHigh, smoothstep(0.55, 1.05, vH));
-    c = mix(c, uBlue, vDepth * 0.32);
+    c = mix(c, uBlue, vAge * 0.32);
     c += uHigh * vGlow * 0.30;
 
-    float fade = mix(0.22, 1.0, 1.0 - vDepth);
+    /* Age 0 is the near, newest edge; the far edge fades toward nothing. */
+    float fade = mix(1.0, 0.18, vAge);
     float a = uOpacity * fade * (0.22 + 0.78 * smoothstep(0.0, 0.4, vH));
 
     /* Additively, distance is dimmer light; normally, it is thinner ink. */
@@ -94,7 +102,8 @@ export default function DepthSurface({ reduced, palette, onReady }) {
     const DEPTH = 20;
     const HEIGHT = 2.8;
     const SPACING = DEPTH / (ROWS - 1);
-    const STEP_MS = 118;
+    const STEP_MS = 125; /* one new book snapshot every 125 ms */
+    const YAW_RATE = 0.03; /* rad/s of idle rotation, time-based */
 
     let renderer;
     try {
@@ -119,16 +128,18 @@ export default function DepthSurface({ reduced, palette, onReady }) {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 220);
 
+    /* Row 0 is the far edge (z = -DEPTH/2); row ROWS-1 is the near edge. */
     const geo = new THREE.PlaneGeometry(WIDTH, DEPTH, COLS - 1, ROWS - 1);
     geo.rotateX(-Math.PI / 2);
 
-    /* Per-vertex distance from the near edge, so the shader can fade the
-       far rows without recomputing anything per frame. */
-    const depthAttr = new Float32Array(COLS * ROWS);
+    /* Per-vertex age, 0 at the near edge and 1 at the far edge, so the
+       shader can fade with distance without any per-frame work. */
+    const ageAttr = new Float32Array(COLS * ROWS);
     for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) depthAttr[r * COLS + c] = r / (ROWS - 1);
+      const age = 1 - r / (ROWS - 1);
+      for (let c = 0; c < COLS; c++) ageAttr[r * COLS + c] = age;
     }
-    geo.setAttribute("aDepth", new THREE.BufferAttribute(depthAttr, 1));
+    geo.setAttribute("aAge", new THREE.BufferAttribute(ageAttr, 1));
 
     const u = {
       uLow: { value: new THREE.Color(palette.low) },
@@ -156,27 +167,46 @@ export default function DepthSurface({ reduced, palette, onReady }) {
     material.current = mat;
 
     const mesh = new THREE.Mesh(geo, mat);
+    /* Heights change every step; never let a stale bounding sphere cull it. */
+    mesh.frustumCulled = false;
     scene.add(mesh);
 
-    /* ---- the synthetic book ---- */
+    /* ---- the synthetic book ----
+       Resting size persists from one snapshot to the next, so each column
+       carries its own slow-moving state rather than fresh noise per row.
+       That is what makes the surface read as ridges of depth rather than
+       a spike field. */
 
+    let midTarget = COLS / 2;
     let midCol = COLS / 2;
-    const grid = [];
+    const noise = new Float32Array(COLS);
+    const block = new Float32Array(COLS);
+    for (let c = 0; c < COLS; c++) noise[c] = Math.random();
 
     const raw = new Float32Array(COLS);
+    const grid = [];
 
     const makeRow = () => {
+      /* The mid drifts on a random walk, eased so a move is a slow lean
+         of the whole ridge rather than a one-tick jump. */
+      if (Math.random() < 0.11) {
+        midTarget += Math.random() > 0.5 ? 1 : -1;
+        midTarget = Math.max(COLS * 0.36, Math.min(COLS * 0.64, midTarget));
+      }
+      midCol += (midTarget - midCol) * 0.22;
+
       for (let c = 0; c < COLS; c++) {
+        noise[c] = noise[c] * 0.8 + Math.random() * 0.2;
+        block[c] = Math.max(block[c] * 0.72, Math.random() > 0.993 ? 1.4 : 0);
+
         const dist = Math.abs(c - midCol);
         const shape =
           Math.exp(-Math.pow((dist - 7) / 9, 2)) * (1 - Math.exp(-dist / 1.6));
-        const noise = 0.62 + Math.random() * 0.72;
-        const block = Math.random() > 0.99 ? 1.9 : 1;
-        raw[c] = shape * noise * block;
+        raw[c] = shape * (0.5 + noise[c] * 0.95) * (1 + block[c]);
       }
 
-      /* A light 3-tap smooth: real resting size is lumpy but continuous,
-         and unsmoothed noise renders as a spike field. */
+      /* A light 3-tap smooth across price: real resting size is lumpy but
+         continuous, and unsmoothed noise renders as a spike field. */
       const row = new Float32Array(COLS);
       for (let c = 0; c < COLS; c++) {
         const a = raw[Math.max(0, c - 1)];
@@ -195,16 +225,16 @@ export default function DepthSurface({ reduced, palette, onReady }) {
     const applyGrid = () => {
       for (let r = 0; r < ROWS; r++) {
         const row = grid[r];
-        const fade = 1 - (r / ROWS) * 0.55;
+        /* Older rows settle a little, as if the book had quietened. */
+        const settle = 0.66 + 0.34 * (r / (ROWS - 1));
         for (let c = 0; c < COLS; c++) {
-          arr[(r * COLS + c) * 3 + 1] = row[c] * HEIGHT * fade;
+          arr[(r * COLS + c) * 3 + 1] = row[c] * HEIGHT * settle;
         }
       }
       pos.needsUpdate = true;
     };
 
     applyGrid();
-    geo.computeBoundingSphere();
 
     /* ---- camera ---- */
 
@@ -300,35 +330,31 @@ export default function DepthSurface({ reduced, palette, onReady }) {
     let raf = 0;
     let last = 0;
     let acc = 0;
-    let tick = 0;
-    let visible = true;
+    let visible = document.visibilityState !== "hidden";
     let onScreen = true;
 
     const loop = (now) => {
       raf = requestAnimationFrame(loop);
+      /* Clamp dt so a stalled frame or a tab switch never fast-forwards. */
       const dt = Math.min(64, now - (last || now));
       last = now;
 
       acc += dt;
-      if (acc >= STEP_MS) {
+      while (acc >= STEP_MS) {
         acc -= STEP_MS;
-        tick += 1;
-        if (tick % 9 === 0 && Math.random() > 0.45) {
-          midCol += Math.random() > 0.5 ? 1 : -1;
-          midCol = Math.max(COLS * 0.36, Math.min(COLS * 0.64, midCol));
-        }
-        grid.pop();
-        grid.unshift(makeRow());
+        grid.shift();
+        grid.push(makeRow());
         applyGrid();
       }
 
-      /* Slide the mesh by the fraction of a row we are through, so the
-         tape flows continuously instead of stepping. */
+      /* Slide by the fraction of a row elapsed. The new row is pushed on
+         the near edge, so the tape recedes: continuous, never stepping. */
       mesh.position.z = -(acc / STEP_MS) * SPACING;
 
-      px += (tx - px) * 0.045;
-      py += (ty - py) * 0.045;
-      if (!dragging) yaw += 0.00045;
+      const k = 1 - Math.exp(-dt / 220);
+      px += (tx - px) * k;
+      py += (ty - py) * k;
+      if (!dragging) yaw += YAW_RATE * (dt / 1000);
       place();
       draw();
     };

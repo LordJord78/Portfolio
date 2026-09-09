@@ -12,7 +12,7 @@ export const PROJECTS = [
     title: "ES-ML-Trader",
     kind: "Research platform",
     year: "1 year",
-    motif: "book",
+    /* No motif: the featured card draws a live synthetic ladder instead. */
     tagline:
       "A machine learning research platform for S&P 500 futures — and the record of it failing to make money.",
     problem:

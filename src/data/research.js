@@ -26,6 +26,14 @@ export const METRICS = [
   },
 ];
 
+/* The four figures under the hero. Same sources as METRICS. */
+export const HERO_STATS = [
+  { v: "20.6 GB", k: "order-book data" },
+  { v: "47,958,325", k: "bars reconstructed" },
+  { v: "5", k: "walk-forward folds" },
+  { v: "0", k: "lookahead violations" },
+];
+
 export const PIPELINE = [
   {
     step: "01",
